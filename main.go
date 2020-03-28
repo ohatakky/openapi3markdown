@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -51,15 +50,7 @@ func main() {
 		tMap[task] = template_md.NewTaskTemplate()
 		tMap[task].SetHeader(h)
 		s := template_md.NewSchemaTemplate(task)
-		if len(schema.Value.Properties) == 0 {
-			ref := strings.TrimLeft(schema.Value.Items.Ref, "#/components/schemas/")
-			s.Set(task, fmt.Sprintf("[[%s]](#%s)", ref, ref), schema.Value.Description, true)
-			ss := template_md.NewSchemaTemplate(ref)
-			tMap[task].SetSchema(s)
-			recrusive(schemas[ref].Value.Properties, schema.Value.Required, ss, tMap[task])
-		} else {
-			recrusive(schema.Value.Properties, schema.Value.Required, s, tMap[task])
-		}
+		recrusive(schema.Value.Properties, schema.Value.Required, s, tMap[task])
 	}
 
 	err := write(tMap)
