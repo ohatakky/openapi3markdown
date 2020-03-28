@@ -87,8 +87,8 @@ func recrusive(properties map[string]*openapi3.SchemaRef, required []string, s *
 }
 
 func write(tMap map[string]*template_md.TaskTemplate) error {
-	if err := os.Mkdir(outDir, 0777); err != nil {
-		return err
+	if _, err := os.Stat(outDir); os.IsNotExist(err) {
+		return os.Mkdir(outDir, 0777)
 	}
 	for k, v := range tMap {
 		file, err := os.Create(fmt.Sprintf("%s/%s.md", outDir, k))
