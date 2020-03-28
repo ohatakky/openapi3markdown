@@ -50,6 +50,7 @@ func main() {
 		tMap[task] = template_md.NewTaskTemplate()
 		tMap[task].SetHeader(h)
 		s := template_md.NewSchemaTemplate(task)
+		// TODO: handle ref
 		recrusive(schema.Value.Properties, schema.Value.Required, s, tMap[task])
 	}
 
